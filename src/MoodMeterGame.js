@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { Card } from "./components/ui/card";
 
 const emotionTags = [
   "快樂 (Happy)", "甜蜜 (Sweet)", "熱情 (Passionate)", "感動 (Touched)",
@@ -22,44 +22,111 @@ export default function MoodMeterGame() {
   const [tags, setTags] = useState(emotionTags);
   const [placed, setPlaced] = useState([]);
 
-  const handlePlace = (tag, x, y) => {
-    setPlaced([...placed, { tag, x, y }]);
-    setTags(tags.filter(t => t !== tag));
+  const handleDrop = (e) => {
+    const tag = e.dataTransfer.getData("text/plain");
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - 40;
+    const y = e.clientY - rect.top - 20;
+
+    // Check if the tag is already placed
+    const alreadyPlaced = placed.find((t) => t.tag === tag);
+
+    if (alreadyPlaced) {
+      // Update position if it's already placed
+      setPlaced(
+        placed.map((t) =>
+          t.tag === tag ? { ...t, x, y } : t
+        )
+      );
+    } else {
+      setPlaced([...placed, { tag, x, y }]);
+      setTags(tags.filter((t) => t !== tag));
+    }
+  };
+
+  const handleReset = () => {
+    setPlaced([]);
+    setTags(emotionTags);
   };
 
   return (
-    <div className="w-full h-screen bg-white flex flex-col items-center p-4">
+    <div className="w-full min-h-screen bg-white flex flex-col items-center p-4">
       <h1 className="text-2xl font-bold mb-4">情緒坐標 | Mood Meter</h1>
-      <div className="relative w-[600px] h-[600px] border-2 border-gray-300">
-        <div className="absolute w-1 h-full bg-black left-1/2 top-0"></div>
-        <div className="absolute h-1 w-full bg-black top-1/2 left-0"></div>
 
+      {/* Reset button */}
+      <button
+        onClick={handleReset}
+        className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        Reset All
+      </button>
+
+      {/* Mood Meter Grid */}
+      <div
+        className="relative w-[600px] h-[600px] border-2 border-black mb-6"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleDrop}
+      >
+        {/* Quadrant backgrounds */}
+        <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-red-100"></div>
+        <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-yellow-100"></div>
+        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-blue-100"></div>
+        <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-green-100"></div>
+
+        {/* Axis lines */}
+        <div className="absolute w-full h-px bg-black top-1/2 left-0"></div>
+        <div className="absolute h-full w-px bg-black left-1/2 top-0"></div>
+
+        {/* Quadrant Labels */}
+        <div className="absolute top-2 left-2 text-xs font-semibold">高能量 / 負向</div>
+        <div className="absolute top-2 right-2 text-xs font-semibold">高能量 / 正向</div>
+        <div className="absolute bottom-2 left-2 text-xs font-semibold">低能量 / 負向</div>
+        <div className="absolute bottom-2 right-2 text-xs font-semibold">低能量 / 正向</div>
+
+        {/* Placed Tags (draggable again) */}
         {placed.map(({ tag, x, y }, index) => (
           <motion.div
             key={index}
-            className="absolute bg-yellow-100 p-1 rounded shadow text-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1, x, y }}
-            transition={{ type: "spring", stiffness: 200 }}
+            className="absolute z-10"
+            style={{ x, y }}
+            drag
+            dragMomentum={false}
+            onDragEnd={(e, info) => {
+              const rect = e.target.offsetParent.getBoundingClientRect();
+              const newX = info.point.x - rect.left - 40;
+              const newY = info.point.y - rect.top - 20;
+
+              setPlaced((prev) =>
+                prev.map((t, i) =>
+                  i === index ? { ...t, x: newX, y: newY } : t
+                )
+              );
+            }}
           >
-            {tag}
+            <Card className="text-sm p-1 px-2 text-center bg-white shadow-md cursor-move">
+              {tag}
+            </Card>
           </motion.div>
         ))}
       </div>
 
-      <div className="mt-6 grid grid-cols-4 gap-2 max-w-4xl">
+      {/* Unplaced Tags */}
+      <div className="grid grid-cols-4 gap-2 max-w-4xl">
         {tags.map((tag, idx) => (
           <Card
             key={idx}
-            onClick={() => handlePlace(tag, Math.random() * 500 - 250, Math.random() * 500 - 250)}
-            className="cursor-pointer text-center p-2 hover:bg-gray-100"
+            className="cursor-move text-center p-2 hover:bg-gray-100"
+            draggable
+            onDragStart={(e) => e.dataTransfer.setData("text/plain", tag)}
           >
             {tag}
           </Card>
         ))}
       </div>
 
-      <p className="mt-4 text-sm text-gray-500">點選一個情緒詞，將其放置在你認為適合的位置（高/低能量，正/負面）。</p>
+      <p className="mt-6 text-sm text-gray-500">
+        拖動情緒詞，根據能量與愉悅程度放在你覺得合適的位置。你也可以重新移動已放置的情緒。
+      </p>
     </div>
   );
 }
