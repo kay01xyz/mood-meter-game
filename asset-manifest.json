@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/mood-meter-game/static/css/main.e3c73a0f.css",
-    "main.js": "/mood-meter-game/static/js/main.4e0a718f.js",
+    "main.css": "/mood-meter-game/static/css/main.600cbc19.css",
+    "main.js": "/mood-meter-game/static/js/main.58f72b41.js",
     "index.html": "/mood-meter-game/index.html",
-    "main.e3c73a0f.css.map": "/mood-meter-game/static/css/main.e3c73a0f.css.map",
-    "main.4e0a718f.js.map": "/mood-meter-game/static/js/main.4e0a718f.js.map"
+    "main.600cbc19.css.map": "/mood-meter-game/static/css/main.600cbc19.css.map",
+    "main.58f72b41.js.map": "/mood-meter-game/static/js/main.58f72b41.js.map"
   },
   "entrypoints": [
-    "static/css/main.e3c73a0f.css",
-    "static/js/main.4e0a718f.js"
+    "static/css/main.600cbc19.css",
+    "static/js/main.58f72b41.js"
   ]
 }
