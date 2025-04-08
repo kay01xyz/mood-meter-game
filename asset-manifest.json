@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/mood-meter-game/static/css/main.e3c73a0f.css",
+    "main.js": "/mood-meter-game/static/js/main.4e0a718f.js",
+    "index.html": "/mood-meter-game/index.html",
+    "main.e3c73a0f.css.map": "/mood-meter-game/static/css/main.e3c73a0f.css.map",
+    "main.4e0a718f.js.map": "/mood-meter-game/static/js/main.4e0a718f.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e3c73a0f.css",
+    "static/js/main.4e0a718f.js"
+  ]
+}
