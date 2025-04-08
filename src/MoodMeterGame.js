@@ -28,16 +28,9 @@ export default function MoodMeterGame() {
     const x = e.clientX - rect.left - 40;
     const y = e.clientY - rect.top - 20;
 
-    // Check if the tag is already placed
     const alreadyPlaced = placed.find((t) => t.tag === tag);
-
     if (alreadyPlaced) {
-      // Update position if it's already placed
-      setPlaced(
-        placed.map((t) =>
-          t.tag === tag ? { ...t, x, y } : t
-        )
-      );
+      setPlaced(placed.map((t) => (t.tag === tag ? { ...t, x, y } : t)));
     } else {
       setPlaced([...placed, { tag, x, y }]);
       setTags(tags.filter((t) => t !== tag));
@@ -51,9 +44,9 @@ export default function MoodMeterGame() {
 
   return (
     <div className="w-full min-h-screen bg-white flex flex-col items-center p-4">
-      <h1 className="text-2xl font-bold mb-4">情緒坐標 | Mood Meter</h1>
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">情緒坐標 | Mood Meter</h1>
 
-      {/* Reset button */}
+      {/* Reset Button */}
       <button
         onClick={handleReset}
         className="mb-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -61,29 +54,29 @@ export default function MoodMeterGame() {
         Reset All
       </button>
 
-      {/* Mood Meter Grid */}
+      {/* Responsive Mood Meter Grid */}
       <div
-        className="relative w-[600px] h-[600px] border-2 border-black mb-6"
+        className="relative w-[320px] h-[320px] sm:w-[480px] sm:h-[480px] md:w-[600px] md:h-[600px] border-2 border-black mb-6"
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
-        {/* Quadrant backgrounds */}
+        {/* Background Quadrants */}
         <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-red-100"></div>
         <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-yellow-100"></div>
         <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-blue-100"></div>
         <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-green-100"></div>
 
-        {/* Axis lines */}
+        {/* Axis Lines */}
         <div className="absolute w-full h-px bg-black top-1/2 left-0"></div>
         <div className="absolute h-full w-px bg-black left-1/2 top-0"></div>
 
-        {/* Quadrant Labels */}
-        <div className="absolute top-2 left-2 text-xs font-semibold">高能量 / 負向</div>
-        <div className="absolute top-2 right-2 text-xs font-semibold">高能量 / 正向</div>
-        <div className="absolute bottom-2 left-2 text-xs font-semibold">低能量 / 負向</div>
-        <div className="absolute bottom-2 right-2 text-xs font-semibold">低能量 / 正向</div>
+        {/* Labels */}
+        <div className="absolute top-2 left-2 text-[10px] sm:text-xs font-semibold">高能量 / 負向</div>
+        <div className="absolute top-2 right-2 text-[10px] sm:text-xs font-semibold">高能量 / 正向</div>
+        <div className="absolute bottom-2 left-2 text-[10px] sm:text-xs font-semibold">低能量 / 負向</div>
+        <div className="absolute bottom-2 right-2 text-[10px] sm:text-xs font-semibold">低能量 / 正向</div>
 
-        {/* Placed Tags (draggable again) */}
+        {/* Placed Tags (Repositionable) */}
         {placed.map(({ tag, x, y }, index) => (
           <motion.div
             key={index}
@@ -103,19 +96,19 @@ export default function MoodMeterGame() {
               );
             }}
           >
-            <Card className="text-sm p-1 px-2 text-center bg-white shadow-md cursor-move">
+            <Card className="text-xs sm:text-sm p-1 px-2 text-center bg-white shadow-md cursor-move whitespace-nowrap">
               {tag}
             </Card>
           </motion.div>
         ))}
       </div>
 
-      {/* Unplaced Tags */}
-      <div className="grid grid-cols-4 gap-2 max-w-4xl">
+      {/* Unplaced Emotion Tags */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 max-w-5xl px-4">
         {tags.map((tag, idx) => (
           <Card
             key={idx}
-            className="cursor-move text-center p-2 hover:bg-gray-100"
+            className="cursor-move text-center text-xs sm:text-sm p-2 hover:bg-gray-100"
             draggable
             onDragStart={(e) => e.dataTransfer.setData("text/plain", tag)}
           >
@@ -124,9 +117,10 @@ export default function MoodMeterGame() {
         ))}
       </div>
 
-      <p className="mt-6 text-sm text-gray-500">
+      <p className="mt-6 text-xs sm:text-sm text-gray-500 text-center px-4">
         拖動情緒詞，根據能量與愉悅程度放在你覺得合適的位置。你也可以重新移動已放置的情緒。
       </p>
     </div>
   );
 }
+
